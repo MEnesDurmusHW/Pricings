@@ -126,7 +126,6 @@
             <th style="width: 40px;">Seç</th>
             <th>Hizmet</th>
             <th class="price">Birim Fiyat</th>
-            <th class="discount-col">İndirim</th>
             <th class="line">Tutar</th>
           </tr>
         </thead>
@@ -153,8 +152,16 @@
         </tbody>
       </table>
 
-      <div class="totals" id="totals">
-        <!-- Toplamlar JS ile eklenecek -->
+      <!-- Sol altta toplam zaman yüzdesi kutusu -->
+      <div style="display: flex; justify-content: space-between; align-items: flex-start; margin-top: 16px;">
+        <div style="background: linear-gradient(180deg, #102048, #0e1a34); border: 1px solid var(--border); border-radius: 12px; padding: 16px; min-width: 200px;">
+          <div style="color: var(--muted); font-size: 12px; margin-bottom: 4px;">Seçili Hizmetler Toplam Zaman</div>
+          <div class="time-percent" style="font-size: 24px; font-weight: 700;" id="totalTimePercent">%0.0</div>
+        </div>
+
+        <div class="totals" id="totals">
+          <!-- Toplamlar JS ile eklenecek -->
+        </div>
       </div>
 
       <div class="controls">
@@ -213,7 +220,6 @@
           <td><input type="checkbox" class="item-checkbox" data-item-index="${items.indexOf(item)}" checked /></td>
           <td class="name">${name}</td>
           <td class="price">${fmt(price)}</td>
-          <td class="discount-col"><span class="discount-badge">${discountRate}%</span></td>
           <td class="line discounted-line-total">${fmt(lineTotal)}</td>
         `;
         setupTbody.appendChild(tr);
@@ -255,6 +261,12 @@
       .filter(item => item.type === "monthly")
       .reduce((s, it) => s + it.workloadPercent, 0);
 
+    // Toplam zaman yüzdesini tabloda güncelle
+    const totalTimeElement = el("#totalTimePercent");
+    if (totalTimeElement) {
+      totalTimeElement.textContent = `%${totalTimePercent.toFixed(1)}`;
+    }
+
     // Original fiyatlarla toplam (tasarruf hesabı için)
     const originalMonthlyTotal = items
       .filter(item => item.type === "monthly")
@@ -289,11 +301,6 @@
       <div class="lineitem total-strong"><span>Aylık Hizmet Genel Toplam ${withVAT ? "(KDV dâhil)" : "(KDV hariç)"}</span><span class="value discount-total">${fmt(monthlyGrand)}</span></div>
       <div style="height: 8px;"></div>
       ` : ''}
-      ${(oneTimeTotal > 0 || monthlyTotal > 0) ? `
-      <div class="lineitem"><span>Toplam Ara Tutar (İndirimli)</span><span class="value discount-total">${fmt(subtotal)}</span></div>
-      <div class="lineitem"><span>Toplam KDV (${Math.round(KDV_RATE*100)}%)</span><span class="value">${withVAT ? fmt(totalKDV) : "—"}</span></div>
-      <div class="lineitem total-strong"><span>Toplam Genel Tutar ${withVAT ? "(KDV dâhil)" : "(KDV hariç)"}</span><span class="value discount-total">${fmt(grandTotal)}</span></div>
-      ` : '<div class="lineitem"><span>Hiç hizmet seçilmedi</span><span class="value">₺0</span></div>'}
     `;
   }
 
