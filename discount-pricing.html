@@ -56,6 +56,11 @@
   tbody tr:last-child td { border-bottom: none; }
   .qty, .price, .line, .discount-col { text-align: right; white-space: nowrap; }
   .name { width: 35%; }
+  .select-col { width: 40px; }
+  .time-col { width: 80px; }
+  .price-col { width: 120px; text-align: right; }
+  .discount-col { width: 80px; }
+  .line-col { width: 120px; text-align: right; }
   .original-price { text-decoration: line-through; color: var(--muted); font-size: 12px; }
   .discounted-price { color: var(--discount); font-weight: 600; }
   .discount-badge {
@@ -123,10 +128,12 @@
       <table id="setupTable" aria-describedby="İlk kurulum ücreti">
         <thead>
           <tr>
-            <th style="width: 40px;">Seç</th>
-            <th>Hizmet</th>
-            <th class="price">Birim Fiyat</th>
-            <th class="line">Tutar</th>
+            <th class="select-col">Seç</th>
+            <th class="time-col"></th>
+            <th class="name">Hizmet</th>
+            <th class="price-col">Birim Fiyat</th>
+            <th class="discount-col">İndirim</th>
+            <th class="line-col">Tutar</th>
           </tr>
         </thead>
         <tbody>
@@ -139,12 +146,12 @@
       <table id="itemsTable" aria-describedby="İndirimli aylık hizmetler">
         <thead>
           <tr>
-            <th style="width: 40px;">Seç</th>
-            <th class="discount-col">Zaman %</th>
-            <th>Hizmet</th>
-            <th class="price">Birim Fiyat</th>
+            <th class="select-col">Seç</th>
+            <th class="time-col">Zaman %</th>
+            <th class="name">Hizmet</th>
+            <th class="price-col">Birim Fiyat</th>
             <th class="discount-col">İndirim</th>
-            <th class="line">Tutar</th>
+            <th class="line-col">Tutar</th>
           </tr>
         </thead>
         <tbody>
@@ -179,7 +186,7 @@
 <script>
   // İş yoğunluğu verileri ve original fiyatlar
   const items = [
-    { name: "İlk Kurulum Ücreti", qty: 1, price: 100000, type: "one-time", workloadPercent: 0, discountRate: 100 },
+    { name: "İlk Kurulum Ücreti", qty: 1, price: 200000, type: "one-time", workloadPercent: 0, discountRate: 70 },
     { name: "Emisyon", qty: 1, price: 40000, type: "monthly", workloadPercent: 34.2, discountRate: 50 },
     { name: "İmisyon", qty: 1, price: 20000, type: "monthly", workloadPercent: 6.0, discountRate: 50 },
     { name: "Koku", qty: 1, price: 20000, type: "monthly", workloadPercent: 4.2, discountRate: 50 },
@@ -194,7 +201,6 @@
   const el = (sel) => document.querySelector(sel);
 
   function getDiscountedPrice(item) {
-    if (item.type === "one-time") return item.price;
     return Math.round(item.price * (1 - item.discountRate / 100));
   }
 
@@ -218,8 +224,10 @@
         // İlk kurulum tablosuna ekle
         tr.innerHTML = `
           <td><input type="checkbox" class="item-checkbox" data-item-index="${items.indexOf(item)}" checked /></td>
+          <td></td>
           <td class="name">${name}</td>
           <td class="price">${fmt(price)}</td>
+          <td class="discount-col"><span class="discount-badge">${discountRate}%</span></td>
           <td class="line discounted-line-total">${fmt(lineTotal)}</td>
         `;
         setupTbody.appendChild(tr);
