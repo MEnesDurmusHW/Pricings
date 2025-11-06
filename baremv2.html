@@ -136,12 +136,13 @@
 <script>
   // Veriler
   const items = [
-    { name: "Emisyon", qty: 1, price: 40000 },
-    { name: "İmisyon", qty: 1, price: 20000 },
-    { name: "Koku", qty: 1, price: 20000 },
-    { name: "SEÖS", qty: 1, price: 30000 },
-    { name: "İş Hijyeni", qty: 1, price: 40000 },
-    { name: "Gürültü", qty: 1, price: 20000 },
+    { name: "İlk Kurulum Ücreti", qty: 1, price: 100000, type: "one-time" },
+    { name: "Emisyon", qty: 1, price: 40000, type: "monthly" },
+    { name: "İmisyon", qty: 1, price: 20000, type: "monthly" },
+    { name: "Koku", qty: 1, price: 20000, type: "monthly" },
+    { name: "SEÖS", qty: 1, price: 30000, type: "monthly" },
+    { name: "İş Hijyeni", qty: 1, price: 40000, type: "monthly" },
+    { name: "Gürültü", qty: 1, price: 20000, type: "monthly" },
   ];
   const KDV_RATE = 0.20;
 
@@ -152,10 +153,11 @@
   function renderTable() {
     const tbody = el("#itemsTable tbody");
     tbody.innerHTML = "";
-    items.forEach(({ name, qty, price }) => {
+    items.forEach(({ name, qty, price, type }) => {
       const tr = document.createElement("tr");
+      const typeText = type === "one-time" ? " (İlk seferlik)" : " (Aylık)";
       tr.innerHTML = `
-        <td class="name">${name}</td>
+        <td class="name">${name}${typeText}</td>
         <td class="qty">${qty}</td>
         <td class="price">${fmt(price)}</td>
         <td class="line">${fmt(qty * price)}</td>
@@ -166,16 +168,38 @@
 
   function renderTotals() {
     const withVAT = el("#toggleKDV").checked;
-    const subtotal = items.reduce((s, it) => s + it.qty * it.price, 0);
-    const kdv = withVAT ? Math.round(subtotal * KDV_RATE) : 0;
-    const grand = subtotal + kdv;
+
+    // Tek seferlik ve aylık ücretleri ayrı hesapla
+    const oneTimeTotal = items
+      .filter(item => item.type === "one-time")
+      .reduce((s, it) => s + it.qty * it.price, 0);
+
+    const monthlyTotal = items
+      .filter(item => item.type === "monthly")
+      .reduce((s, it) => s + it.qty * it.price, 0);
+
+    // Her kategori için ayrı KDV hesapla
+    const oneTimeKDV = withVAT ? Math.round(oneTimeTotal * KDV_RATE) : 0;
+    const monthlyKDV = withVAT ? Math.round(monthlyTotal * KDV_RATE) : 0;
+
+    const oneTimeGrand = oneTimeTotal + oneTimeKDV;
+    const monthlyGrand = monthlyTotal + monthlyKDV;
+
+    const subtotal = oneTimeTotal + monthlyTotal;
+    const totalKDV = oneTimeKDV + monthlyKDV;
+    const grandTotal = oneTimeGrand + monthlyGrand;
 
     const totals = el("#totals");
     totals.innerHTML = `
-      <div class="lineitem"><span>Ara Toplam</span><span class="value">${fmt(subtotal)}</span></div>
-      <div class="lineitem"><span>KDV (${Math.round(KDV_RATE*100)}%)</span><span class="value">${withVAT ? fmt(kdv) : "—"}</span></div>
-      <div class="lineitem total-strong"><span>Genel Toplam ${withVAT ? "(KDV dâhil)" : "(KDV hariç)"}</span><span class="value">${fmt(grand)}</span></div>
-    `;
+      <div class="lineitem"><span>İlk Kurulum Toplam</span><span class="value">${fmt(oneTimeTotal)}</span></div>
+      <div class="lineitem"><span>İlk Kurulum KDV (${Math.round(KDV_RATE*100)}%)</span><span class="value">${withVAT ? fmt(oneTimeKDV) : "—"}</span></div>
+      <div class="lineitem total-strong"><span>İlk Kurulum Genel Toplam ${withVAT ? "(KDV dâhil)" : "(KDV hariç)"}</span><span class="value">${fmt(oneTimeGrand)}</span></div>
+      <div style="height: 8px;"></div>
+      <div class="lineitem"><span>Aylık Hizmet Toplam</span><span class="value">${fmt(monthlyTotal)}</span></div>
+      <div class="lineitem"><span>Aylık Hizmet KDV (${Math.round(KDV_RATE*100)}%)</span><span class="value">${withVAT ? fmt(monthlyKDV) : "—"}</span></div>
+      <div class="lineitem total-strong"><span>Aylık Hizmet Genel Toplam ${withVAT ? "(KDV dâhil)" : "(KDV hariç)"}</span><span class="value">${fmt(monthlyGrand)}</span></div>
+      <div style="height: 8px;"></div>
+   `;
   }
 
   function copyHTML() {

@@ -1,0 +1,316 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>İndirimli Teklif — Çevresel Ölçüm ve Hizmetler</title>
+<style>
+  :root {
+    --bg: #0b1324;
+    --card: #0f1b36;
+    --muted: #97a3b6;
+    --text: #e6edf7;
+    --accent: #4aa3ff;
+    --ok: #10b981;
+    --border: #213055;
+    --discount: #f59e0b;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; padding: 24px;
+    font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    color: var(--text); background: radial-gradient(1200px 600px at 20% -10%, #18244a, #0b1324 40%) no-repeat, var(--bg);
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  .card {
+    background: linear-gradient(180deg, #102048, #0e1a34);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+  header {
+    display: grid; gap: 8px;
+    grid-template-columns: 1fr auto;
+    align-items: center; margin-bottom: 12px;
+  }
+  h1 { font-size: 20px; margin: 0; letter-spacing: 0.2px; }
+  .subtitle { color: var(--discount); font-size: 14px; font-weight: 600; margin-top: 4px; }
+  .subtle { color: var(--muted); font-size: 13px; }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .pill {
+    padding: 6px 10px; border: 1px solid var(--border); border-radius: 999px;
+    font-size: 12px; color: var(--muted);
+  }
+
+  table {
+    width: 100%; border-collapse: collapse; margin-top: 12px; overflow: hidden; border-radius: 12px; border: 1px solid var(--border);
+  }
+  thead th {
+    text-align: left; font-size: 12px; letter-spacing: .3px; color: var(--muted);
+    background: #0c1a34; border-bottom: 1px solid var(--border); padding: 10px 12px;
+  }
+  tbody td {
+    padding: 12px; border-bottom: 1px solid #182a54; vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  .qty, .price, .line, .discount-col { text-align: right; white-space: nowrap; }
+  .name { width: 35%; }
+  .original-price { text-decoration: line-through; color: var(--muted); font-size: 12px; }
+  .discounted-price { color: var(--discount); font-weight: 600; }
+  .discount-badge {
+    background: var(--discount); color: #000; padding: 2px 6px; border-radius: 4px;
+    font-size: 11px; font-weight: 600; margin-left: 4px;
+  }
+  .discounted-line-total {
+    color: var(--discount); font-weight: 700; font-size: 16px;
+  }
+  .totals {
+    margin-top: 16px; display: grid; gap: 8px; justify-content: end;
+  }
+  .totals .lineitem {
+    display: grid; grid-template-columns: auto auto; gap: 18px; align-items: baseline;
+    min-width: 280px; color: var(--muted);
+  }
+  .totals .value { text-align: right; color: var(--text); }
+  .total-strong { font-size: 18px; color: #fff; }
+  .discount-total { color: var(--discount); }
+  .controls {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 16px;
+  }
+  .btn {
+    appearance: none; border: 1px solid var(--border); background: #132753;
+    color: #fff; padding: 10px 14px; border-radius: 10px; cursor: pointer; font-weight: 600;
+  }
+  .btn:hover { filter: brightness(1.05); }
+  label.toggle {
+    display: inline-flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;
+    color: var(--muted); font-size: 14px;
+  }
+  input[type="checkbox"] { width: 18px; height: 18px; }
+  .item-checkbox { width: 16px; height: 16px; }
+  .time-percent { font-weight: 600; color: var(--accent); }
+  footer { margin-top: 18px; color: var(--muted); font-size: 12px; }
+  .success { color: var(--ok); }
+  @media print {
+    body { background: #fff; color: #000; padding: 0; }
+    .card { box-shadow: none; border: none; background: #fff; color: #000; }
+    .subtitle, .subtle, .pill, .controls, .success { color: #333 !important; }
+    .btn, label.toggle { display: none; }
+    thead th, tbody td { border-color: #ddd !important; }
+    .lineitem { color: #000; }
+    .value { color: #000; }
+    .discounted-price, .discount-total { color: #d97706 !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <header>
+        <div>
+          <h1>İndirimli Teklif — Çevresel Ölçüm ve Hizmetler</h1>
+          <div class="subtitle">İş Yoğunluğu Bazlı İndirimli Fiyatlandırma</div>
+          <div class="subtle">Tarih: <span id="issueDate"></span> • Para birimi: TL</div>
+        </div>
+        <div class="row">
+          <span class="pill" id="quoteId">Teklif No: Q-ENV-2025-002</span>
+        </div>
+      </header>
+
+      <!-- İlk Kurulum Tablosu -->
+      <h3 style="color: var(--text); margin: 16px 0 8px 0; font-size: 16px;">İlk Kurulum Ücreti (İndirimli)</h3>
+      <table id="setupTable" aria-describedby="İlk kurulum ücreti">
+        <thead>
+          <tr>
+            <th style="width: 40px;">Seç</th>
+            <th>Hizmet</th>
+            <th class="price">Birim Fiyat</th>
+            <th class="discount-col">İndirim</th>
+            <th class="line">Tutar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Kurulum satırı JS ile eklenecek -->
+        </tbody>
+      </table>
+
+      <!-- Aylık Hizmetler Tablosu -->
+      <h3 style="color: var(--text); margin: 24px 0 8px 0; font-size: 16px;">Aylık Hizmetler (İndirimli)</h3>
+      <table id="itemsTable" aria-describedby="İndirimli aylık hizmetler">
+        <thead>
+          <tr>
+            <th style="width: 40px;">Seç</th>
+            <th class="discount-col">Zaman %</th>
+            <th>Hizmet</th>
+            <th class="price">Birim Fiyat</th>
+            <th class="discount-col">İndirim</th>
+            <th class="line">Tutar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Aylık satırlar JS ile eklenecek -->
+        </tbody>
+      </table>
+
+      <div class="totals" id="totals">
+        <!-- Toplamlar JS ile eklenecek -->
+      </div>
+
+      <div class="controls">
+        <label class="toggle">
+          <input type="checkbox" id="toggleKDV" />
+          Toplamları %20 KDV dahil göster
+        </label>
+        <div class="row" style="gap:8px;">
+          <button class="btn" onclick="window.print()">Yazdır / PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // İş yoğunluğu verileri ve original fiyatlar
+  const items = [
+    { name: "İlk Kurulum Ücreti", qty: 1, price: 100000, type: "one-time", workloadPercent: 0, discountRate: 100 },
+    { name: "Emisyon", qty: 1, price: 40000, type: "monthly", workloadPercent: 34.2, discountRate: 50 },
+    { name: "İmisyon", qty: 1, price: 20000, type: "monthly", workloadPercent: 6.0, discountRate: 50 },
+    { name: "Koku", qty: 1, price: 20000, type: "monthly", workloadPercent: 4.2, discountRate: 50 },
+    { name: "SEÖS", qty: 1, price: 30000, type: "monthly", workloadPercent: 10.8, discountRate: 50 },
+    { name: "İş Hijyeni", qty: 1, price: 40000, type: "monthly", workloadPercent: 43.02, discountRate: 50 },
+    { name: "Gürültü", qty: 1, price: 20000, type: "monthly", workloadPercent: 1.74, discountRate: 50 },
+  ];
+  const KDV_RATE = 0.20;
+
+  // Yardımcılar
+  const fmt = (n) => n.toLocaleString("tr-TR", { style: "currency", currency: "TRY", maximumFractionDigits: 0 });
+  const el = (sel) => document.querySelector(sel);
+
+  function getDiscountedPrice(item) {
+    if (item.type === "one-time") return item.price;
+    return Math.round(item.price * (1 - item.discountRate / 100));
+  }
+
+  function renderTable() {
+    // İlk kurulum tablosu
+    const setupTbody = el("#setupTable tbody");
+    setupTbody.innerHTML = "";
+
+    // Aylık hizmetler tablosu
+    const monthlyTbody = el("#itemsTable tbody");
+    monthlyTbody.innerHTML = "";
+
+    items.forEach((item) => {
+      const { name, qty, price, type, discountRate, workloadPercent } = item;
+      const discountedPrice = getDiscountedPrice(item);
+      const lineTotal = qty * discountedPrice;
+
+      const tr = document.createElement("tr");
+
+      if (type === "one-time") {
+        // İlk kurulum tablosuna ekle
+        tr.innerHTML = `
+          <td><input type="checkbox" class="item-checkbox" data-item-index="${items.indexOf(item)}" checked /></td>
+          <td class="name">${name}</td>
+          <td class="price">${fmt(price)}</td>
+          <td class="discount-col"><span class="discount-badge">${discountRate}%</span></td>
+          <td class="line discounted-line-total">${fmt(lineTotal)}</td>
+        `;
+        setupTbody.appendChild(tr);
+      } else {
+        // Aylık hizmetler tablosuna ekle
+        tr.innerHTML = `
+          <td><input type="checkbox" class="item-checkbox" data-item-index="${items.indexOf(item)}" checked /></td>
+          <td class="discount-col time-percent">%${workloadPercent}</td>
+          <td class="name">${name}</td>
+          <td class="price">${fmt(price)}</td>
+          <td class="discount-col"><span class="discount-badge">${discountRate}%</span></td>
+          <td class="line discounted-line-total">${fmt(lineTotal)}</td>
+        `;
+        monthlyTbody.appendChild(tr);
+      }
+    });
+  }
+
+  function renderTotals() {
+    const withVAT = el("#toggleKDV").checked;
+
+    // Seçili item'ları al
+    const selectedItems = items.filter((item, index) => {
+      const checkbox = document.querySelector(`[data-item-index="${index}"]`);
+      return checkbox && checkbox.checked;
+    });
+
+    // Tek seferlik ve aylık ücretleri ayrı hesapla (sadece seçililer)
+    const oneTimeTotal = selectedItems
+      .filter(item => item.type === "one-time")
+      .reduce((s, it) => s + it.qty * getDiscountedPrice(it), 0);
+
+    const monthlyTotal = selectedItems
+      .filter(item => item.type === "monthly")
+      .reduce((s, it) => s + it.qty * getDiscountedPrice(it), 0);
+
+    // Toplam zaman yüzdesi hesapla (sadece seçili aylık hizmetler için)
+    const totalTimePercent = selectedItems
+      .filter(item => item.type === "monthly")
+      .reduce((s, it) => s + it.workloadPercent, 0);
+
+    // Original fiyatlarla toplam (tasarruf hesabı için)
+    const originalMonthlyTotal = items
+      .filter(item => item.type === "monthly")
+      .reduce((s, it) => s + it.qty * it.price, 0);
+
+    const totalSavings = originalMonthlyTotal - monthlyTotal;
+
+    // Her kategori için ayrı KDV hesapla
+    const oneTimeKDV = withVAT ? Math.round(oneTimeTotal * KDV_RATE) : 0;
+    const monthlyKDV = withVAT ? Math.round(monthlyTotal * KDV_RATE) : 0;
+
+    const oneTimeGrand = oneTimeTotal + oneTimeKDV;
+    const monthlyGrand = monthlyTotal + monthlyKDV;
+
+    const subtotal = oneTimeTotal + monthlyTotal;
+    const totalKDV = oneTimeKDV + monthlyKDV;
+    const grandTotal = oneTimeGrand + monthlyGrand;
+
+    const totals = el("#totals");
+    totals.innerHTML = `
+      ${oneTimeTotal > 0 ? `
+      <div class="lineitem"><span>İlk Kurulum Toplam</span><span class="value">${fmt(oneTimeTotal)}</span></div>
+      <div class="lineitem"><span>İlk Kurulum KDV (${Math.round(KDV_RATE*100)}%)</span><span class="value">${withVAT ? fmt(oneTimeKDV) : "—"}</span></div>
+      <div class="lineitem total-strong"><span>İlk Kurulum Genel Toplam ${withVAT ? "(KDV dâhil)" : "(KDV hariç)"}</span><span class="value">${fmt(oneTimeGrand)}</span></div>
+      <div style="height: 8px;"></div>
+      ` : ''}
+      ${monthlyTotal > 0 ? `
+      <div class="lineitem"><span>Seçili Hizmetler Toplam Zaman</span><span class="value time-percent">%${totalTimePercent.toFixed(1)}</span></div>
+      <div class="lineitem"><span>Aylık Hizmet Toplam (İndirimli)</span><span class="value discount-total">${fmt(monthlyTotal)}</span></div>
+      <div class="lineitem"><span>Aylık Toplam Tasarruf</span><span class="value discount-total">-${fmt(totalSavings)}</span></div>
+      <div class="lineitem"><span>Aylık Hizmet KDV (${Math.round(KDV_RATE*100)}%)</span><span class="value">${withVAT ? fmt(monthlyKDV) : "—"}</span></div>
+      <div class="lineitem total-strong"><span>Aylık Hizmet Genel Toplam ${withVAT ? "(KDV dâhil)" : "(KDV hariç)"}</span><span class="value discount-total">${fmt(monthlyGrand)}</span></div>
+      <div style="height: 8px;"></div>
+      ` : ''}
+      ${(oneTimeTotal > 0 || monthlyTotal > 0) ? `
+      <div class="lineitem"><span>Toplam Ara Tutar (İndirimli)</span><span class="value discount-total">${fmt(subtotal)}</span></div>
+      <div class="lineitem"><span>Toplam KDV (${Math.round(KDV_RATE*100)}%)</span><span class="value">${withVAT ? fmt(totalKDV) : "—"}</span></div>
+      <div class="lineitem total-strong"><span>Toplam Genel Tutar ${withVAT ? "(KDV dâhil)" : "(KDV hariç)"}</span><span class="value discount-total">${fmt(grandTotal)}</span></div>
+      ` : '<div class="lineitem"><span>Hiç hizmet seçilmedi</span><span class="value">₺0</span></div>'}
+    `;
+  }
+
+  // Başlat
+  document.addEventListener("DOMContentLoaded", () => {
+    el("#issueDate").textContent = new Date().toLocaleDateString("tr-TR");
+    renderTable();
+    renderTotals();
+    el("#toggleKDV").addEventListener("change", renderTotals);
+
+    // Checkbox değişikliklerini dinle
+    document.addEventListener('change', (e) => {
+      if (e.target.classList.contains('item-checkbox')) {
+        renderTotals();
+      }
+    });
+  });
+</script>
+</body>
+</html>
