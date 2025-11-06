@@ -184,14 +184,14 @@
   </div>
 
 <script>
-  // İş yoğunluğu verileri ve original fiyatlar
+  // İş yoğunluğu verileri ve original fiyatlar (aylık hizmetler zaman yüzdesine göre sıralı)
   const items = [
     { name: "İlk Kurulum Ücreti", qty: 1, price: 200000, type: "one-time", workloadPercent: 0, discountRate: 70 },
+    { name: "İş Hijyeni", qty: 1, price: 40000, type: "monthly", workloadPercent: 43.02, discountRate: 50 },
     { name: "Emisyon", qty: 1, price: 40000, type: "monthly", workloadPercent: 34.2, discountRate: 50 },
+    { name: "SEÖS", qty: 1, price: 30000, type: "monthly", workloadPercent: 10.8, discountRate: 50 },
     { name: "İmisyon", qty: 1, price: 20000, type: "monthly", workloadPercent: 6.0, discountRate: 50 },
     { name: "Koku", qty: 1, price: 20000, type: "monthly", workloadPercent: 4.2, discountRate: 50 },
-    { name: "SEÖS", qty: 1, price: 30000, type: "monthly", workloadPercent: 10.8, discountRate: 50 },
-    { name: "İş Hijyeni", qty: 1, price: 40000, type: "monthly", workloadPercent: 43.02, discountRate: 50 },
     { name: "Gürültü", qty: 1, price: 20000, type: "monthly", workloadPercent: 1.74, discountRate: 50 },
   ];
   const KDV_RATE = 0.20;
