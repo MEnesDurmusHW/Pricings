@@ -106,8 +106,6 @@
         <thead>
           <tr>
             <th>Hizmet</th>
-            <th class="qty">Adet</th>
-            <th class="price">Birim Fiyat</th>
             <th class="line">Tutar</th>
           </tr>
         </thead>
@@ -138,7 +136,7 @@
   const items = [
     { name: "İlk Kurulum Ücreti", qty: 1, price: 200000, type: "one-time" },
     { name: "Emisyon", qty: 1, price: 40000, type: "monthly" },
-    { name: "İmisyon", qty: 1, price: 20000, type: "monthly" },
+    { name: "İmisyon", qty: 1, price: 30000, type: "monthly" },
     { name: "Koku", qty: 1, price: 20000, type: "monthly" },
     { name: "SEÖS", qty: 1, price: 30000, type: "monthly" },
     { name: "İş Hijyeni", qty: 1, price: 40000, type: "monthly" },
@@ -158,8 +156,6 @@
       const typeText = type === "one-time" ? " (İlk seferlik)" : " (Aylık)";
       tr.innerHTML = `
         <td class="name">${name}${typeText}</td>
-        <td class="qty">${qty}</td>
-        <td class="price">${fmt(price)}</td>
         <td class="line">${fmt(qty * price)}</td>
       `;
       tbody.appendChild(tr);
