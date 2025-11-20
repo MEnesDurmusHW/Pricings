@@ -1,0 +1,454 @@
+<!doctype html>
+<html lang="tr">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>İndirimli Teklif — Çevresel Ölçüm ve Hizmetler</title>
+<style>
+  :root {
+    --bg: #0b1324;
+    --card: #0f1b36;
+    --muted: #97a3b6;
+    --text: #e6edf7;
+    --accent: #4aa3ff;
+    --ok: #10b981;
+    --border: #213055;
+    --discount: #f59e0b;
+  }
+  * { box-sizing: border-box; }
+  html, body { height: 100%; }
+  body {
+    margin: 0; padding: 24px;
+    font-family: ui-sans-serif, -apple-system, Segoe UI, Roboto, Helvetica, Arial, "Apple Color Emoji", "Segoe UI Emoji";
+    color: var(--text); background: radial-gradient(1200px 600px at 20% -10%, #18244a, #0b1324 40%) no-repeat, var(--bg);
+  }
+  .container { max-width: 900px; margin: 0 auto; }
+  .card {
+    background: linear-gradient(180deg, #102048, #0e1a34);
+    border: 1px solid var(--border);
+    border-radius: 16px; padding: 20px;
+    box-shadow: 0 10px 30px rgba(0,0,0,.35);
+  }
+  header {
+    display: grid; gap: 8px;
+    grid-template-columns: 1fr auto;
+    align-items: center; margin-bottom: 12px;
+  }
+  h1 { font-size: 20px; margin: 0; letter-spacing: 0.2px; }
+  .subtitle { color: var(--discount); font-size: 14px; font-weight: 600; margin-top: 4px; }
+  .subtle { color: var(--muted); font-size: 13px; }
+  .row { display: flex; flex-wrap: wrap; gap: 12px; align-items: center; }
+  .pill {
+    padding: 6px 10px; border: 1px solid var(--border); border-radius: 999px;
+    font-size: 12px; color: var(--muted);
+  }
+
+  table {
+    width: 100%; border-collapse: collapse; margin-top: 12px; overflow: hidden; border-radius: 12px; border: 1px solid var(--border);
+  }
+  thead th {
+    text-align: left; font-size: 12px; letter-spacing: .3px; color: var(--muted);
+    background: #0c1a34; border-bottom: 1px solid var(--border); padding: 10px 12px;
+  }
+  tbody td {
+    padding: 12px; border-bottom: 1px solid #182a54; vertical-align: middle;
+  }
+  tbody tr:last-child td { border-bottom: none; }
+  .qty, .price, .line, .discount-col { text-align: right; white-space: nowrap; }
+  .name { width: 35%; }
+  .select-col { width: 40px; }
+  .time-col { width: 80px; }
+  .price-col { width: 120px; text-align: right; }
+  .discount-col { width: 80px; }
+  .line-col { width: 120px; text-align: right; }
+  .original-price { text-decoration: line-through; color: var(--muted); font-size: 14px; }
+  .discounted-price { color: var(--discount); font-weight: 600; }
+  .discount-badge {
+    background: var(--discount); color: #000; padding: 2px 6px; border-radius: 4px;
+    font-size: 11px; font-weight: 600; margin-left: 4px;
+  }
+  .discounted-line-total {
+    color: var(--discount); font-weight: 700; font-size: 16px;
+  }
+  .totals {
+    margin-top: 16px; display: grid; gap: 8px; justify-content: end;
+  }
+  .totals .lineitem {
+    display: grid; grid-template-columns: auto auto; gap: 18px; align-items: baseline;
+    min-width: 280px; color: var(--muted);
+  }
+  .totals .value { text-align: right; color: var(--text); }
+  .total-strong { font-size: 18px; color: #fff; }
+  .discount-total { color: var(--discount); }
+  .controls {
+    display: flex; flex-wrap: wrap; gap: 10px; justify-content: space-between; align-items: center; margin-top: 16px;
+  }
+  .btn {
+    appearance: none; border: 1px solid var(--border); background: #132753;
+    color: #fff; padding: 10px 14px; border-radius: 10px; cursor: pointer; font-weight: 600;
+  }
+  .btn:hover { filter: brightness(1.05); }
+  label.toggle {
+    display: inline-flex; align-items: center; gap: 8px; cursor: pointer; user-select: none;
+    color: var(--muted); font-size: 14px;
+  }
+  input[type="checkbox"] { width: 18px; height: 18px; }
+  .item-checkbox { width: 16px; height: 16px; }
+  .time-percent { font-weight: 600; color: var(--accent); }
+  footer { margin-top: 18px; color: var(--muted); font-size: 12px; }
+  .success { color: var(--ok); }
+  @media print {
+    body { background: #fff; color: #000; padding: 0; }
+    .card { box-shadow: none; border: none; background: #fff; color: #000; }
+    .subtitle, .subtle, .pill, .controls, .success { color: #333 !important; }
+    .btn, label.toggle { display: none; }
+    thead th, tbody td { border-color: #ddd !important; }
+    .lineitem { color: #000; }
+    .value { color: #000; }
+    .discounted-price, .discount-total { color: #d97706 !important; }
+  }
+</style>
+</head>
+<body>
+  <div class="container">
+    <div class="card">
+      <header>
+        <div>
+          <h1>İndirimli Teklif — Çevresel Ölçüm ve Hizmetler</h1>
+          <div class="subtitle">Barem Çevre Firması İçin İndirimli Fiyat</div>
+          <div class="subtle">Tarih: <span id="issueDate"></span> • Para birimi: TL</div>
+        </div>
+        <div class="row">
+          <span class="pill" id="quoteId">Teklif No: Q-ENV-2025-002</span>
+        </div>
+      </header>
+
+      <!-- İlk Kurulum Tablosu -->
+      <h3 style="color: var(--text); margin: 16px 0 8px 0; font-size: 16px;">İlk Kurulum Ücreti (İndirimli)</h3>
+      <table id="setupTable" aria-describedby="İlk kurulum ücreti">
+        <thead>
+          <tr>
+            <th class="name">Hizmet</th>
+            <th class="price-col">Birim Fiyat</th>
+            <th class="discount-col">İndirim</th>
+            <th class="line-col">Tutar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Kurulum satırı JS ile eklenecek -->
+        </tbody>
+      </table>
+
+      <!-- Modül Seçim Alanı -->
+      <div style="margin: 24px 0 16px 0;">
+        <h3 style="color: var(--text); margin: 0 0 8px 0; font-size: 16px;">
+          Raporlama Modülleri
+        </h3>
+        <div class="subtle" style="margin-bottom: 12px;">Emirli olarak İlk modül: Emisyon, Sonraki modüller: 1 Aralık 2025'ten itibaren seçilebilir zamanlama</div>
+
+        <!-- Hazır Tarih Seçimi -->
+        <!-- Timeline Kronoloji Çizgisi -->
+        <div style="background: linear-gradient(180deg, #102048, #0e1a34); border: 1px solid var(--border); border-radius: 12px; padding: 20px; margin-bottom: 16px;">
+          <div style="color: var(--muted); font-size: 12px; margin-bottom: 16px;">Modül Hazır Olma Kronolojisi</div>
+
+          <div style="position: relative; display: flex; align-items: center; margin: 20px 0;">
+            <!-- Ana çizgi -->
+            <div style="position: absolute; top: 20px; left: 0; right: 0; height: 2px; background: linear-gradient(90deg, var(--accent), var(--ok)); z-index: 1;"></div>
+
+            <!-- Timeline noktaları -->
+            <div style="display: flex; justify-content: space-between; align-items: flex-start; width: 100%; position: relative; z-index: 2;">
+              <!-- Emisyon -->
+              <div style="display: flex; flex-direction: column; align-items: center; min-width: 120px;">
+                <div style="width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: 3px solid #0b1324; margin-bottom: 8px;"></div>
+                <div style="text-align: center;">
+                  <div style="font-size: 11px; color: var(--muted); margin-bottom: 2px;">Aralık 2025</div>
+                  <div style="color: var(--accent); font-weight: 600; font-size: 13px;">Emisyon</div>
+                  <div style="font-size: 11px; color: var(--accent); font-weight: 600;">+%25</div>
+                  <div style="font-size: 10px; color: var(--muted);">Toplam: %25</div>
+                </div>
+              </div>
+
+              <!-- İş Hijyeni -->
+              <div style="display: flex; flex-direction: column; align-items: center; min-width: 120px;">
+                <div style="width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: 3px solid #0b1324; margin-bottom: 8px;"></div>
+                <div style="text-align: center;">
+                  <div style="font-size: 11px; color: var(--muted); margin-bottom: 2px;">Mart 2026</div>
+                  <div style="color: var(--accent); font-weight: 600; font-size: 13px;">İş Hijyeni</div>
+                  <div style="font-size: 11px; color: var(--accent); font-weight: 600;">+%30</div>
+                  <div style="font-size: 10px; color: var(--muted);">Toplam: %55</div>
+                </div>
+              </div>
+
+              <!-- Su Atık -->
+              <div style="display: flex; flex-direction: column; align-items: center; min-width: 120px;">
+                <div style="width: 16px; height: 16px; border-radius: 50%; background: var(--accent); border: 3px solid #0b1324; margin-bottom: 8px;"></div>
+                <div style="text-align: center;">
+                  <div style="font-size: 11px; color: var(--muted); margin-bottom: 2px;">Haziran 2026</div>
+                  <div style="color: var(--accent); font-weight: 600; font-size: 13px;">Su Atık</div>
+                  <div style="font-size: 11px; color: var(--accent); font-weight: 600;">+%25</div>
+                  <div style="font-size: 10px; color: var(--muted);">Toplam: %80</div>
+                </div>
+              </div>
+
+              <!-- SEÖS -->
+              <div style="display: flex; flex-direction: column; align-items: center; min-width: 120px;">
+                <div style="width: 16px; height: 16px; border-radius: 50%; background: var(--ok); border: 3px solid #0b1324; margin-bottom: 8px;"></div>
+                <div style="text-align: center;">
+                  <div style="font-size: 11px; color: var(--muted); margin-bottom: 2px;">Eylül 2026</div>
+                  <div style="color: var(--ok); font-weight: 600; font-size: 13px;">SEÖS</div>
+                  <div style="font-size: 11px; color: var(--ok); font-weight: 600;">+%10</div>
+                  <div style="font-size: 10px; color: var(--muted);">Toplam: %90</div>
+                </div>
+              </div>
+            </div>
+          </div>
+
+        </div>
+      </div>
+
+
+      <!-- Diğer Hizmetler Tablosu -->
+      <h3 style="color: var(--text); margin: 24px 0 8px 0; font-size: 16px;">Baremlab Hizmetleri</h3>
+      <table id="itemsTable" aria-describedby="Baremlab hizmetleri">
+        <thead>
+          <tr>
+            <th class="name">Hizmet</th>
+            <th class="price-col">Birim Fiyat</th>
+            <th class="discount-col">İndirim</th>
+            <th class="line-col">Tutar</th>
+          </tr>
+        </thead>
+        <tbody>
+          <!-- Baremlab satırları JS ile eklenecek -->
+        </tbody>
+      </table>
+
+      <!-- Kar Analizi Tablosu -->
+      <div style="margin-top: 24px; margin-bottom: 20px;">
+        <h3 style="color: var(--text); margin: 0 0 8px 0; font-size: 16px;">Kar Analizi - Personel Optimizasyonu</h3>
+        <div style="color: var(--muted); font-size: 12px; margin-bottom: 12px;">1 Raporlamacı Maliyet: 100.000 TL/ay</div>
+        <table style="width: 100%; border-collapse: collapse; color: var(--text); background: linear-gradient(180deg, #102048, #0e1a34); border: 1px solid var(--border); border-radius: 12px; overflow: hidden;">
+          <thead>
+            <tr style="background: #0c1a34; border-bottom: 1px solid var(--border);">
+              <th style="text-align: left; padding: 12px; color: var(--muted); font-size: 14px;">Fiyat Seviyesi</th>
+              <th style="text-align: center; padding: 12px; color: var(--muted); font-size: 14px;">1 Kişi Azaltım</th>
+              <th style="text-align: center; padding: 12px; color: var(--muted); font-size: 14px;">2 Kişi Azaltım</th>
+            </tr>
+          </thead>
+          <tbody>
+            <tr style="border-bottom: 1px solid var(--border);">
+              <td style="padding: 12px; color: var(--muted); font-weight: 600;">75.000 TL/ay</td>
+              <td style="padding: 12px; text-align: center; color: var(--ok); font-weight: 600;">25k/ay<br><span style="font-size: 12px; color: var(--muted);">300k/yıl</span></td>
+              <td style="padding: 12px; text-align: center; color: var(--ok); font-weight: 600;">125k/ay<br><span style="font-size: 12px; color: var(--muted);">1.5M/yıl</span></td>
+            </tr>
+            <tr>
+              <td style="padding: 12px; color: var(--accent); font-weight: 600;">64.000 TL/ay (İndirimli)</td>
+              <td style="padding: 12px; text-align: center; color: var(--ok); font-weight: 600;">36k/ay<br><span style="font-size: 12px; color: var(--muted);">432k/yıl</span></td>
+              <td style="padding: 12px; text-align: center; color: var(--ok); font-weight: 600;">136k/ay<br><span style="font-size: 12px; color: var(--muted);">1.63M/yıl</span></td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <!-- Metrikler ve Toplamlar -->
+      <div style="margin-top: 16px;">
+        <!-- Metrikler -->
+        <div style="display: flex; flex-wrap: wrap; gap: 12px; margin-bottom: 16px;">
+          <div style="background: linear-gradient(180deg, #102048, #0e1a34); border: 1px solid var(--border); border-radius: 12px; padding: 16px; flex: 1; min-width: 180px;">
+            <div style="color: var(--muted); font-size: 12px; margin-bottom: 4px;">İş Yükü Azalma</div>
+            <div class="time-percent" style="font-size: 24px; font-weight: 700;" id="totalTimePercent">%0.0</div>
+          </div>
+        </div>
+
+        <!-- Toplamlar -->
+        <div style="display: flex; justify-content: flex-end;">
+          <div class="totals" id="totals">
+            <!-- Toplamlar JS ile eklenecek -->
+          </div>
+        </div>
+      </div>
+
+      <div class="controls">
+        <label class="toggle">
+          <input type="checkbox" id="toggleKDV" />
+          Toplamları %20 KDV dahil göster
+        </label>
+        <div class="row" style="gap:8px;">
+          <button class="btn" onclick="window.print()">Yazdır / PDF</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+<script>
+  // Yeni modüler fiyatlandırma sistemi
+  const setupOptions = [
+    { name: "İlk Kurulum Ücreti", price: 200000, levels: [200000, 120000, 80000] }
+  ];
+
+  const reportingModules = [
+    { name: "Emisyon", workloadPercent: 25.0, prices: [20000, 20000, 20000, 18000], order: 1, mandatory: true, readyMonth: 1 },
+    { name: "İş Hijyeni", workloadPercent: 30.0, prices: [20000, 18000, 17000, 16000], order: 2, mandatory: false, readyMonth: 4 },
+    { name: "Su Atık", workloadPercent: 25.0, prices: [20000, 16000, 14000, 11000], order: 3, mandatory: false, readyMonth: 7 },
+    { name: "SEÖS", workloadPercent: 10.0, prices: [15000, 10000, 7000, 5000], order: 4, mandatory: false, readyMonth: 10 }
+  ];
+
+  const baremServices = [
+    { name: "Baremlab Temel", qty: 1, price: 30000, workloadPercent: 0, levels: [30000, 22000, 18000, 10000] }
+  ];
+
+  // Aktif fiyat seviyesi (0: teklif, 1: indirimli, 2: pazarlık, 3: gizli minimum)
+  let currentPriceLevel = 1;
+  const KDV_RATE = 0.20;
+
+  // Yardımcılar
+  const fmt = (n) => n.toLocaleString("tr-TR", { style: "currency", currency: "TRY", maximumFractionDigits: 0 });
+  const el = (sel) => document.querySelector(sel);
+
+  function getCurrentPrice(item, level = currentPriceLevel) {
+    if (item.levels) {
+      return item.levels[level] || item.price;
+    }
+    if (item.prices) {
+      return item.prices[level] || item.prices[0];
+    }
+    return item.price;
+  }
+
+  function getModulePrice(module, selectedCount) {
+    // Sıralı fiyatlandırma: seçilen modül sayısına göre fiyat
+    const priceIndex = Math.min(selectedCount - 1, module.prices.length - 1);
+    return module.prices[priceIndex];
+  }
+
+  function updateTimelineLabel() {
+    // Artık timeline slider yok, sadece sabit takvim
+  }
+
+  function renderTable() {
+    // İlk kurulum tablosu
+    const setupTbody = el("#setupTable tbody");
+    setupTbody.innerHTML = "";
+
+    setupOptions.forEach((item, index) => {
+      const currentPrice = getCurrentPrice(item);
+      const originalPrice = item.price;
+      const discountRate = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="name">${item.name}</td>
+        <td class="price"><span class="original-price">${fmt(originalPrice)}</span></td>
+        <td class="discount-col"><span class="discount-badge">${discountRate}%</span></td>
+        <td class="line discounted-line-total">${fmt(currentPrice)}</td>
+      `;
+      setupTbody.appendChild(tr);
+    });
+
+    // Modül tablosu kaldırıldı
+
+    // Baremlab hizmetleri tablosu
+    const baremTbody = el("#itemsTable tbody");
+    baremTbody.innerHTML = "";
+
+    baremServices.forEach((item, index) => {
+      const currentPrice = getCurrentPrice(item);
+      const originalPrice = item.price;
+      const discountRate = Math.round(((originalPrice - currentPrice) / originalPrice) * 100);
+
+      const tr = document.createElement("tr");
+      tr.innerHTML = `
+        <td class="name">${item.name}</td>
+        <td class="price"><span class="original-price">${fmt(originalPrice)}</span></td>
+        <td class="discount-col"><span class="discount-badge">${discountRate}%</span></td>
+        <td class="line discounted-line-total">${fmt(currentPrice)}</td>
+      `;
+      baremTbody.appendChild(tr);
+    });
+
+    // Raporlama modülleri toplam satırını ekle
+    const reportingTotalTr = document.createElement("tr");
+    reportingTotalTr.style.borderTop = "2px solid var(--border)";
+    reportingTotalTr.innerHTML = `
+      <td class="name">Tüm Raporlama Modülleri</td>
+      <td class="price"><span class="original-price">${fmt(75000)}</span></td>
+      <td class="discount-col"><span class="discount-badge">15%</span></td>
+      <td class="line discounted-line-total">${fmt(64000)}</td>
+    `;
+    baremTbody.appendChild(reportingTotalTr);
+  }
+
+  function renderTotals() {
+    const withVAT = el("#toggleKDV").checked;
+
+    // Tüm hizmetler varsayılan olarak seçili
+    const selectedSetup = setupOptions;
+    const selectedModules = reportingModules;
+    const selectedBarem = baremServices;
+
+    // Hesaplamalar
+    const setupTotal = selectedSetup.reduce((s, item) => s + getCurrentPrice(item), 0);
+
+    const moduleTotal = selectedModules.reduce((s, module, index) => {
+      const modulePrice = getModulePrice(module, selectedModules.length);
+      return s + modulePrice;
+    }, 0);
+
+    const baremTotal = selectedBarem.reduce((s, item) => s + getCurrentPrice(item), 0);
+
+    // İş yükü hesaplamaları
+    const totalWorkloadPercent = [
+      ...selectedModules.map(m => m.workloadPercent),
+      ...selectedBarem.map(b => b.workloadPercent)
+    ].reduce((s, percent) => s + percent, 0);
+
+    // Toplam zaman yüzdesini güncelle
+    const totalTimeElement = el("#totalTimePercent");
+    if (totalTimeElement) {
+      totalTimeElement.textContent = `%${totalWorkloadPercent.toFixed(1)}`;
+    }
+
+    // ROI ve amorte hesaplamaları (artık kullanılmıyor ama temizlik için)
+
+    // Tasarruf hesaplamaları
+    const originalModuleTotal = selectedModules.reduce((s, module) => s + module.prices[0], 0);
+    const originalBaremTotal = selectedBarem.reduce((s, item) => s + item.price, 0);
+    const totalSavings = (originalModuleTotal + originalBaremTotal) - (moduleTotal + baremTotal);
+
+    // KDV hesaplamaları
+    const setupKDV = withVAT ? Math.round(setupTotal * KDV_RATE) : 0;
+    const monthlyKDV = withVAT ? Math.round((moduleTotal + baremTotal) * KDV_RATE) : 0;
+
+    const setupGrand = setupTotal + setupKDV;
+    const monthlyGrand = moduleTotal + baremTotal + monthlyKDV;
+
+    const totals = el("#totals");
+    totals.innerHTML = `
+      ${setupTotal > 0 ? `
+      <div class="lineitem total-strong"><span>İlk Kurulum Toplam ${withVAT ? "(KDV dâhil)" : "(KDV hariç)"}</span><span class="value">${fmt(setupGrand)}</span></div>
+      <div style="height: 12px;"></div>
+      ` : ''}
+      ${(moduleTotal + baremTotal) > 0 ? `
+      <div class="lineitem total-strong"><span>Aylık Hizmet Toplam ${withVAT ? "(KDV dâhil)" : "(KDV hariç)"}</span><span class="value discount-total">${fmt(monthlyGrand)}</span></div>
+      ` : ''}
+    `;
+  }
+
+  // Başlat
+  document.addEventListener("DOMContentLoaded", () => {
+    el("#issueDate").textContent = new Date().toLocaleDateString("tr-TR");
+
+    // Timeline slider kaldırıldı
+
+    // Modül detayları butonu kaldırıldı
+
+    renderTable();
+    renderTotals();
+    el("#toggleKDV").addEventListener("change", renderTotals);
+    el("#layoffDate").addEventListener("change", renderTotals);
+
+    // Checkbox'lar kaldırıldığı için event listener'a gerek yok
+  });
+</script>
+</body>
+</html>
