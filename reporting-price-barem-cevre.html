@@ -389,10 +389,8 @@
     // Hesaplamalar
     const setupTotal = selectedSetup.reduce((s, item) => s + getCurrentPrice(item), 0);
 
-    const moduleTotal = selectedModules.reduce((s, module, index) => {
-      const modulePrice = getModulePrice(module, selectedModules.length);
-      return s + modulePrice;
-    }, 0);
+    // Raporlama modülleri toplam sabit 64k (tablodaki değer ile uyumlu)
+    const moduleTotal = 64000;
 
     const baremTotal = selectedBarem.reduce((s, item) => s + getCurrentPrice(item), 0);
 
